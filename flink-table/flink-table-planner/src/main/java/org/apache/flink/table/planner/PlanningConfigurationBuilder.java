@@ -19,7 +19,7 @@
 package org.apache.flink.table.planner;
 
 import org.apache.flink.annotation.Internal;
-//import org.apache.flink.sql.parser.impl.FlinkSqlParserImpl;
+import org.apache.flink.sql.parser.impl.FlinkSqlParserImpl;
 import org.apache.flink.sql.parser.validate.FlinkSqlConformance;
 import org.apache.flink.table.api.TableConfig;
 import org.apache.flink.table.calcite.CalciteConfig;
@@ -149,16 +149,15 @@ public class PlanningConfigurationBuilder {
 	 * Returns the SQL parser config for this environment including a custom Calcite configuration.
 	 */
 	public SqlParser.Config getSqlParserConfig() {
-//		return JavaScalaConversionUtil.toJava(calciteConfig(tableConfig).sqlParserConfig()).orElseGet(() ->
-//			// we use Java lex because back ticks are easier than double quotes in programming
-//			// and cases are preserved
-//			SqlParser
-//				.configBuilder()
-//				.setParserFactory(FlinkSqlParserImpl.FACTORY)
-//				.setConformance(FlinkSqlConformance.DEFAULT)
-//				.setLex(Lex.JAVA)
-//				.build());
-		return null;
+		return JavaScalaConversionUtil.toJava(calciteConfig(tableConfig).sqlParserConfig()).orElseGet(() ->
+			// we use Java lex because back ticks are easier than double quotes in programming
+			// and cases are preserved
+			SqlParser
+				.configBuilder()
+				.setParserFactory(FlinkSqlParserImpl.FACTORY)
+				.setConformance(FlinkSqlConformance.DEFAULT)
+				.setLex(Lex.JAVA)
+				.build());
 	}
 
 	private CatalogReader createCatalogReader(
