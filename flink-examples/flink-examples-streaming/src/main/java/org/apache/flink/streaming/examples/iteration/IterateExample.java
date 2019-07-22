@@ -19,6 +19,7 @@ package org.apache.flink.streaming.examples.iteration;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple5;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
@@ -95,7 +96,7 @@ public class IterateExample {
 		// to produce the final output select the tuples directed to the
 		// 'output' channel then get the input pairs that have the greatest iteration counter
 		// on a 1 second sliding window
-		DataStream<Tuple2<Tuple2<Integer, Integer>, Integer>> numbers = step.select("output")
+		DataStream<Tuple3<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>, Integer>> numbers = step.select("output")
 				.map(new OutputMap());
 
 		// emit results
@@ -210,14 +211,14 @@ public class IterateExample {
 	 * Giving back the input pair and the counter.
 	 */
 	public static class OutputMap implements MapFunction<Tuple5<Integer, Integer, Integer, Integer, Integer>,
-			Tuple2<Tuple2<Integer, Integer>, Integer>> {
+		Tuple3<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>, Integer>> {
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Tuple2<Tuple2<Integer, Integer>, Integer> map(Tuple5<Integer, Integer, Integer, Integer, Integer>
+		public Tuple3<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>, Integer> map(Tuple5<Integer, Integer, Integer, Integer, Integer>
 				value) throws
 				Exception {
-			return new Tuple2<>(new Tuple2<>(value.f0, value.f1), value.f4);
+			return new Tuple3<>(new Tuple2<>(value.f0, value.f1), new Tuple2<>(value.f2, value.f3), value.f4);
 		}
 	}
 
